@@ -36,6 +36,8 @@ Legend = {{mode}}
 
 Unit = Percent (0.0-1.0)
 
+//or check this https://www.robustperception.io/understanding-machine-cpu-usage
+
 --------- RAM
 
 Unit = bytes(IEC) 

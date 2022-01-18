@@ -24,7 +24,7 @@ const write_in_csv = () => {
 
 let it = 0
 const topic = 'send'
-const kafka_consumer = kafka.consumer({groupId: 'consumer-group'})
+const kafka_consumer = kafka.consumer({groupId:'consumer-group'})
 
 const consume = async () => { 
     await kafka_consumer.connect() 
