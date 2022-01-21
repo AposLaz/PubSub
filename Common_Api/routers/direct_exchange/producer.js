@@ -44,22 +44,12 @@ const RabbitSettings = {
 /*-----------------------------------------------------------------------
                              POST
 -------------------------------------------------------------------------*/
-const rabbit_direct_producer = async function connect(ngsi,callback){
-  amqp_callback.connect(RabbitSettings, function(error0, connection) {
-    if (error0) {
-      throw error0;
-    }
-    connection.createConfirmChannel(function(error1, channel) {
-      if (error1) {
-        throw error1;
-      }
+const rabbit_direct_producer = async function connect(channel, ngsi,callback){
+
       var exchange = 'direct_exchange';
 
       var routing_key = "routingKeyA";
-     
-      channel.assertExchange(exchange, 'direct', {
-        durable: false
-      });
+
 
       channel.publish(exchange, routing_key, Buffer.from(JSON.stringify(ngsi)), {},async function (err,ok){
          if (err !== null){ 
@@ -73,9 +63,6 @@ const rabbit_direct_producer = async function connect(ngsi,callback){
            callback(null,ok)
          }
       });
-    });
-  });
-
 }
 
 module.exports = {

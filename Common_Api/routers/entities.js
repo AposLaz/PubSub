@@ -9,9 +9,42 @@ const kafka_node = require('kafka-node')
 
 /////////////////////////////////////---------------RABBIT CONSTS
 //producer
-const rabbit_producer = require('./direct_exchange/producer')
-const rabbit_consumer = require('./direct_exchange/consumer_get')
+var amqp = require('amqplib');
 
+const rabbit_producer = require('./direct_exchange/producer')
+
+const RabbitSettings = {
+    protocol: 'amqp',
+    hostname: 'rabbitmq',
+    port: 5672,
+    username: 'guest',
+    password: 'guest',
+    vhost: '/',
+    authMechanism: ['PLAIN','AMQPLAIN','EXTERNAL']
+}
+
+let data_d
+let channel
+
+const connect_channels_rabbitMQ = async () => { 
+    const connect = await amqp.connect(RabbitSettings)
+
+    const channel1 = await connect.createConfirmChannel()
+
+    const exchange = "direct_exchange"
+
+    await channel1.assertExchange(exchange,'direct',{ durable:false })
+
+    return channel1
+}
+
+connect_channels_rabbitMQ().then((data) => {
+    data_d = data
+}).catch(e => console.error(e))
+
+setTimeout(()=>{
+     channel = data_d
+}, 3000)
 
 /////////////////////////////////////----------------FAYE CONSTS
 const faye = require('faye');
@@ -158,7 +191,7 @@ router.post('/service_discovery/:service_id', (req, res)=>{
             else if(service_id == 'rabbit'){
 
     
-                rabbit_producer.rabbit_direct_producer(ngsi, (err,body)=>{
+                rabbit_producer.rabbit_direct_producer(channel, ngsi, (err,body)=>{
                     if(err)
                     {
                         res.send(err)
