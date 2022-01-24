@@ -30,6 +30,7 @@ const consume = async () => {
     await kafka_consumer.connect() 
     await kafka_consumer.subscribe({topic})
     await kafka_consumer.run({
+        autoCommitInterval: 600000,
         eachMessage: async ({ topic, partition, message }) => {
             await write_in_csv()
             it = it + 1

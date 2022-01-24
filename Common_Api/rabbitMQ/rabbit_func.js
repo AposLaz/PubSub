@@ -63,7 +63,7 @@ async function connectional(){
              it = it+1
              console.log(it)
         }, {
-            noAck: false
+            noAck: true
         })
 
   } catch (e) {
